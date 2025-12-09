@@ -66,6 +66,24 @@ cdef extern from "class.h":
         int index_bg_H
         int index_bg_D
         int index_bg_f
+
+        ########################
+        # For use with CONCEPT #
+        ########################
+        # Second-order growth factor and rate
+        int index_bg_D2
+        int index_bg_f2
+        # Third-order growth factors and rates
+        int index_bg_D3a
+        int index_bg_f3a
+        int index_bg_D3b
+        int index_bg_f3b
+        int index_bg_D3c
+        int index_bg_f3c
+        ##########################
+        # ^For use with CONCEPT^ #
+        ##########################
+
         int index_bg_Omega_m
         int index_bg_G_eff_smg
         int index_bg_slip_eff_smg
@@ -120,6 +138,16 @@ cdef extern from "class.h":
         double H_eq
         double z_eq
         double tau_eq
+
+        ########################
+        # For use with CONCEPT #
+        ########################
+        int node
+        int num_threads
+        char* message
+        ##########################
+        # ^For use with CONCEPT^ #
+        ##########################
 
     cdef struct thermodynamics:
         short is_allocated

@@ -656,6 +656,24 @@ int background_functions(
     /** - velocity growth factor */
     pvecback[pba->index_bg_f] = pvecback_B[pba->index_bi_D_prime]/( pvecback_B[pba->index_bi_D]*a*pvecback[pba->index_bg_H]);
 
+    /************************/
+    /* For use with CONCEPT */
+    /************************/
+    /*vp*/
+    /* - 2nd order growth factor and velocity growth factor */
+    pvecback[pba->index_bg_D2] = pvecback_B[pba->index_bi_D2];
+    pvecback[pba->index_bg_f2] = pvecback_B[pba->index_bi_D2_prime]/( pvecback_B[pba->index_bi_D2]*a*pvecback[pba->index_bg_H]);
+    /* - 3rd order growth factor and velocity growth factor */
+    pvecback[pba->index_bg_D3a] = pvecback_B[pba->index_bi_D3a];
+    pvecback[pba->index_bg_f3a] = pvecback_B[pba->index_bi_D3a_prime]/( pvecback_B[pba->index_bi_D3a]*a*pvecback[pba->index_bg_H]);
+    pvecback[pba->index_bg_D3b] = pvecback_B[pba->index_bi_D3b];
+    pvecback[pba->index_bg_f3b] = pvecback_B[pba->index_bi_D3b_prime]/( pvecback_B[pba->index_bi_D3b]*a*pvecback[pba->index_bg_H]);
+    pvecback[pba->index_bg_D3c] = pvecback_B[pba->index_bi_D3c];
+    pvecback[pba->index_bg_f3c] = pvecback_B[pba->index_bi_D3c_prime]/( pvecback_B[pba->index_bi_D3c]*a*pvecback[pba->index_bg_H]);
+    /**************************/
+    /* ^For use with CONCEPT^ */
+    /**************************/
+
     /**- Varying fundamental constants */
     if (pba->has_varconst == _TRUE_) {
       class_call(background_varconst_of_z(pba,
@@ -972,6 +990,15 @@ int background_free_input(
     free(pba->M_ncdm);
     free(pba->T_ncdm);
     free(pba->ksi_ncdm);
+
+    /************************/
+    /* For use with CONCEPT */
+    /************************/
+    free(pba->growthfac_contrib_ncdm);
+    /**************************/
+    /* ^For use with CONCEPT^ */
+    /**************************/
+
     free(pba->deg_ncdm);
     free(pba->Omega0_ncdm);
     free(pba->m_ncdm_in_eV);
@@ -1196,6 +1223,23 @@ int background_indices(
   /* -> velocity growth factor in dust universe */
   class_define_index(pba->index_bg_f,_TRUE_,index_bg,1);
 
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  /* Second-order growth factor and rate */
+  class_define_index(pba->index_bg_D2, _TRUE_, index_bg, 1);
+  class_define_index(pba->index_bg_f2, _TRUE_, index_bg, 1);
+  /* Third-order growth factors and rates */
+  class_define_index(pba->index_bg_D3a, _TRUE_, index_bg, 1);
+  class_define_index(pba->index_bg_f3a, _TRUE_, index_bg, 1);
+  class_define_index(pba->index_bg_D3b, _TRUE_, index_bg, 1);
+  class_define_index(pba->index_bg_f3b, _TRUE_, index_bg, 1);
+  class_define_index(pba->index_bg_D3c, _TRUE_, index_bg, 1);
+  class_define_index(pba->index_bg_f3c, _TRUE_, index_bg, 1);
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
+
   /* -> varying fundamental constant -- alpha (fine structure) */
   class_define_index(pba->index_bg_varc_alpha,pba->has_varconst,index_bg,1);
 
@@ -1269,6 +1313,22 @@ int background_indices(
   class_define_index(pba->index_bi_D,_TRUE_,index_bi,1);
   class_define_index(pba->index_bi_D_prime,_TRUE_,index_bi,1);
 
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  /* -> Second-order equation for second-order growth factor */
+  class_define_index(pba->index_bi_D2, _TRUE_, index_bi, 1);
+  class_define_index(pba->index_bi_D2_prime, _TRUE_, index_bi, 1);
+  /* -> Third-order equations for third-order growth factors */
+  class_define_index(pba->index_bi_D3a, _TRUE_, index_bi, 1);
+  class_define_index(pba->index_bi_D3a_prime, _TRUE_, index_bi, 1);
+  class_define_index(pba->index_bi_D3b, _TRUE_, index_bi, 1);
+  class_define_index(pba->index_bi_D3b_prime, _TRUE_, index_bi, 1);
+  class_define_index(pba->index_bi_D3c, _TRUE_, index_bi, 1);
+  class_define_index(pba->index_bi_D3c_prime, _TRUE_, index_bi, 1);
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
 
   /* -> end of indices in the vector of variables to integrate */
   pba->bi_size = index_bi;
@@ -2160,6 +2220,18 @@ int background_solve(
 
     pba->background_table[index_loga*pba->bg_size+pba->index_bg_D]*= 1./D_today;
 
+    /************************/
+    /* For use with CONCEPT */
+    /************************/
+    // vp: Normalise higher order growth factors:
+    pba->background_table[index_loga*pba->bg_size+pba->index_bg_D2]*= pow(1./D_today,2);
+    pba->background_table[index_loga*pba->bg_size+pba->index_bg_D3a]*= pow(1./D_today,3);
+    pba->background_table[index_loga*pba->bg_size+pba->index_bg_D3b]*= pow(1./D_today,3);
+    pba->background_table[index_loga*pba->bg_size+pba->index_bg_D3c]*= pow(1./D_today,3);
+    /**************************/
+    /* ^For use with CONCEPT^ */
+    /**************************/
+
     conformal_distance = pba->conformal_age - pba->tau_table[index_loga];
     pba->background_table[index_loga*pba->bg_size+pba->index_bg_conf_distance] = conformal_distance;
 
@@ -2569,6 +2641,33 @@ int background_initial_conditions(
   pvecback_integration[pba->index_bi_D] = 1.;
   pvecback_integration[pba->index_bi_D_prime] = 2.*a*pvecback[pba->index_bg_H];
 
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  /* Use proper initial conditions for the growth factors */
+  double Omega0_M = pba->Omega0_b;
+  if (pba->has_cdm == _TRUE_)
+    Omega0_M += pba->Omega0_cdm;
+  if (pba->has_dcdm == _TRUE_)
+    Omega0_M += pba->Omega_ini_dcdm;  /* take dcdm into account */
+  double Omega0_R_eff = pow(a, 4)*pow(pvecback[pba->index_bg_H]/pba->H0, 2);  /* take all relativistic species into account */
+  double eps = 3./2.*Omega0_M/Omega0_R_eff*a;
+  double aH = a*pvecback[pba->index_bg_H];
+  double C = 1.0;  /* arbitrary */
+  pvecback_integration[pba->index_bi_D]         = pow(C, 1)   *(1. + 1.*eps + 1./4.*eps*eps);
+  pvecback_integration[pba->index_bi_D_prime]   = pow(C, 1)*aH*(0. + 1.*eps + 1./2.*eps*eps);
+  pvecback_integration[pba->index_bi_D2]        = pow(C, 2)   *(0. + 1.*eps + 3./4.*eps*eps);
+  pvecback_integration[pba->index_bi_D2_prime]  = pow(C, 2)*aH*(0. + 1.*eps + 3./2.*eps*eps);
+  pvecback_integration[pba->index_bi_D3a]       = pow(C, 3)   *(0. + 2.*eps + 2./1.*eps*eps);
+  pvecback_integration[pba->index_bi_D3a_prime] = pow(C, 3)*aH*(0. + 2.*eps + 4./1.*eps*eps);
+  pvecback_integration[pba->index_bi_D3b]       = pow(C, 3)   *(0. + 2.*eps + 5./2.*eps*eps);
+  pvecback_integration[pba->index_bi_D3b_prime] = pow(C, 3)*aH*(0. + 2.*eps + 5./1.*eps*eps);
+  pvecback_integration[pba->index_bi_D3c]       = pow(C, 3)   *(0. + 1.*eps + 3./4.*eps*eps);
+  pvecback_integration[pba->index_bi_D3c_prime] = pow(C, 3)*aH*(0. + 1.*eps + 3./2.*eps*eps);
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
+
   /** - return the value finally chosen for the initial log(a) */
   *loga_ini = log(a);
 
@@ -2717,6 +2816,21 @@ int background_output_titles(
   class_store_columntitle(titles,"gr.fac. D",_TRUE_);
   class_store_columntitle(titles,"gr.fac. f",_TRUE_);
 
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  class_store_columntitle(titles, "gr.fac. D2", _TRUE_);
+  class_store_columntitle(titles, "gr.fac. f2", _TRUE_);
+  class_store_columntitle(titles, "gr.fac. D3a", _TRUE_);
+  class_store_columntitle(titles, "gr.fac. f3a", _TRUE_);
+  class_store_columntitle(titles, "gr.fac. D3b", _TRUE_);
+  class_store_columntitle(titles, "gr.fac. f3b", _TRUE_);
+  class_store_columntitle(titles, "gr.fac. D3c", _TRUE_);
+  class_store_columntitle(titles, "gr.fac. f3c", _TRUE_);
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
+
   class_store_columntitle(titles,"rel. alpha",pba->has_varconst);
   class_store_columntitle(titles,"rel. m_e",pba->has_varconst);
 
@@ -2797,6 +2911,21 @@ int background_output_data(
 
     class_store_double(dataptr,pvecback[pba->index_bg_D],_TRUE_,storeidx);
     class_store_double(dataptr,pvecback[pba->index_bg_f],_TRUE_,storeidx);
+
+    /************************/
+    /* For use with CONCEPT */
+    /************************/
+    class_store_double(dataptr, pvecback[pba->index_bg_D2], _TRUE_, storeidx);
+    class_store_double(dataptr, pvecback[pba->index_bg_f2], _TRUE_, storeidx);
+    class_store_double(dataptr, pvecback[pba->index_bg_D3a], _TRUE_, storeidx);
+    class_store_double(dataptr, pvecback[pba->index_bg_f3a], _TRUE_, storeidx);
+    class_store_double(dataptr, pvecback[pba->index_bg_D3b], _TRUE_, storeidx);
+    class_store_double(dataptr, pvecback[pba->index_bg_f3b], _TRUE_, storeidx);
+    class_store_double(dataptr, pvecback[pba->index_bg_D3c], _TRUE_, storeidx);
+    class_store_double(dataptr, pvecback[pba->index_bg_f3c], _TRUE_, storeidx);
+    /**************************/
+    /* ^For use with CONCEPT^ */
+    /**************************/
 
     class_store_double(dataptr,pvecback[pba->index_bg_varc_alpha],pba->has_varconst,storeidx);
     class_store_double(dataptr,pvecback[pba->index_bg_varc_me],pba->has_varconst,storeidx);
@@ -2916,8 +3045,70 @@ int background_derivs(
     rho_M += pvecback[pba->index_bg_rho_idm];
   }
 
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  /* Include dcdm in growth factors */
+  if (pba->has_dcdm == _TRUE_)
+    rho_M += pvecback[pba->index_bg_rho_dcdm];
+  /**
+   * Code for including the non-relativistic contribution from ncdm in
+   * growth factors. For small (realistic for neutrinos) ncdm masses,
+   * ncdm will only cluster on large, linear scales. Including ncdm
+   * when computing the scale-independent growth factors will then add
+   * a correction to all scales, which should really only be applied
+   * to large scales, greater than the free-streaming scale,
+   * see (96) in https://arxiv.org/abs/astro-ph/0603494
+   */
+  double rho_ncdm, p_ncdm;
+  int n_ncdm;
+  if (pba->has_ncdm == _TRUE_) {
+    for (n_ncdm = 0; n_ncdm < pba->N_ncdm; n_ncdm++) {
+      if (pba->growthfac_contrib_ncdm[n_ncdm] == 0.) {
+        continue;
+      }
+      class_call(background_ncdm_momenta(
+        pba->q_ncdm_bg[n_ncdm],
+        pba->w_ncdm_bg[n_ncdm],
+        pba->q_size_ncdm_bg[n_ncdm],
+        pba->M_ncdm[n_ncdm],
+        pba->factor_ncdm[n_ncdm],
+        1./a - 1.,
+        NULL,
+        &rho_ncdm,
+        &p_ncdm,
+        NULL,
+        NULL),
+        pba->error_message,
+        pba->error_message);
+      rho_M += pba->growthfac_contrib_ncdm[n_ncdm]*(rho_ncdm - 3.*p_ncdm);
+    }
+  }
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
+
   dy[pba->index_bi_D] = y[pba->index_bi_D_prime]/a/H;
   dy[pba->index_bi_D_prime] = -y[pba->index_bi_D_prime] + 1.5*a*rho_M*y[pba->index_bi_D]/H;
+
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  /* Second-order growth factor */
+  dy[pba->index_bi_D2] = y[pba->index_bi_D2_prime]/a/H;
+  dy[pba->index_bi_D2_prime] = -y[pba->index_bi_D2_prime] + 1.5*a*rho_M*(y[pba->index_bi_D2] + pow(y[pba->index_bi_D], 2))/H;
+  /* Third-order growth factors */
+  dy[pba->index_bi_D3a] = y[pba->index_bi_D3a_prime]/a/H;
+  dy[pba->index_bi_D3a_prime] = -y[pba->index_bi_D3a_prime] + 1.5*a*rho_M*(y[pba->index_bi_D3a] + 2.*pow(y[pba->index_bi_D], 3))/H;
+  dy[pba->index_bi_D3b] = y[pba->index_bi_D3b_prime]/a/H;
+  dy[pba->index_bi_D3b_prime] = -y[pba->index_bi_D3b_prime] + 1.5*a*rho_M*(y[pba->index_bi_D3b] 
+      + 2.*y[pba->index_bi_D]*y[pba->index_bi_D2] + 2.*pow(y[pba->index_bi_D], 3))/H;
+  dy[pba->index_bi_D3c] = y[pba->index_bi_D3c_prime]/a/H;
+  dy[pba->index_bi_D3c_prime] = -y[pba->index_bi_D3c_prime]
+    + 1.5*a*rho_M*pow(y[pba->index_bi_D], 3)/H;
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
 
   if (pba->has_dcdm == _TRUE_) {
     /** - compute dcdm density \f$ d\rho/dloga = -3 \rho - \Gamma/H \rho \f$*/
@@ -2992,6 +3183,13 @@ int background_sources(
   double * bg_table_late_row; // used for wext and rho_de expansion parametrisation
   double H_old, rho_crit_old, rho_tot_old, Omega_m_old, Omega_r_old, f_old;
 
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  double f2_old, f3a_old, f3b_old, f3c_old;
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
   pbpaw = parameters_and_workspace;
   pba =  pbpaw->pba;
 
@@ -3026,6 +3224,17 @@ int background_sources(
         Omega_r_old = bg_table_row[pba->index_bg_Omega_r];
         // double Omega_de_old = bg_table_row[pba->index_bg_Omega_de];
         f_old = bg_table_row[pba->index_bg_f];
+        /************************/
+        /* For use with CONCEPT */
+        /************************/
+        // vp: update f2 considering smg!
+        f2_old = bg_table_row[pba->index_bg_f2];
+        f3a_old = bg_table_row[pba->index_bg_f3a];
+        f3b_old = bg_table_row[pba->index_bg_f3b];
+        f3c_old = bg_table_row[pba->index_bg_f3c];
+        /**************************/
+        /* ^For use with CONCEPT^ */
+        /**************************/
         // Update quantities in background_table depending on rho_smg and p_smg
         class_call(interpolate_rho_smg_p_smg(pba, log(a), log(1/(1.+pba->z_gr_smg)), bg_table_row),
                   pba->error_message,
@@ -3044,6 +3253,17 @@ int background_sources(
         // bg_table_row[pba->index_bg_Omega_de] = Omega_de_old*rho_tot_old/bg_table_row[pba->index_bg_rho_tot];
         bg_table_row[pba->index_bg_Omega_de] = bg_table_row[pba->index_bg_rho_smg]/bg_table_row[pba->index_bg_rho_tot];
         bg_table_row[pba->index_bg_f] = f_old*H_old/bg_table_row[pba->index_bg_H];
+        /************************/
+        /* For use with CONCEPT */
+        /************************/
+        // vp: update f2 considering smg!
+        bg_table_row[pba->index_bg_f2] = f2_old*H_old/bg_table_row[pba->index_bg_H];
+        bg_table_row[pba->index_bg_f3a] = f3a_old*H_old/bg_table_row[pba->index_bg_H];
+        bg_table_row[pba->index_bg_f3b] = f3b_old*H_old/bg_table_row[pba->index_bg_H];
+        bg_table_row[pba->index_bg_f3c] = f3c_old*H_old/bg_table_row[pba->index_bg_H];
+        /**************************/
+        /* ^For use with CONCEPT^ */
+        /**************************/
         // Update relevant quantities in background_table_late depending on rho_smg and p_smg. For late vector transition happens earlier.
         class_call(interpolate_rho_smg_p_smg(pba, 
                                             log(a), 

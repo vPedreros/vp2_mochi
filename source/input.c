@@ -416,6 +416,20 @@ int input_read_from_file(struct file_content * pfc,
   /** -- Special setting of parameter, before anything else: did shooting fail? */
   pba->shooting_failed = _FALSE_;
 
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  char * CONCEPT_CLASS_CALL = getenv("CONCEPT_CLASS_CALL");
+  if (CONCEPT_CLASS_CALL == NULL) {
+    pba->node = 0;
+    pba->num_threads = -1;
+    pba->message = (char*)malloc(1*sizeof(char));
+    pba->message[0] = '\0';
+  }
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
+
   /** Find out if shooting necessary and, eventually, shoot and initialize
       read parameters */
   class_call(input_shooting(pfc,ppr,pba,pth,ppt,ptr,ppm,phr,pfo,ple,psd,pop,
@@ -2717,6 +2731,16 @@ int input_read_parameters_species(struct file_content * pfc,
     /** 5.f) Chemical potentials */
     /* Read */
     class_read_list_of_doubles_or_default("ksi_ncdm",pba->ksi_ncdm,pba->ksi_ncdm_default,N_ncdm);
+
+    /************************/
+    /* For use with CONCEPT */
+    /************************/
+    /* Read growth factor contribution of each ncdm species: */
+    class_read_list_of_doubles_or_default(
+      "growthfac_contrib_ncdm",pba->growthfac_contrib_ncdm,0.0,N_ncdm);
+    /**************************/
+    /* ^For use with CONCEPT^ */
+    /**************************/
 
     /** 5.g) Degeneracy of each ncdm species */
     /* Read */
@@ -6008,6 +6032,15 @@ int input_default_params(struct background *pba,
   /** 5.f) ncdm chemical potential */
   pba->ksi_ncdm_default = 0.;
   pba->ksi_ncdm = NULL;
+
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  pba->growthfac_contrib_ncdm = NULL;
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
+
   /** 5.g) ncdm degeneracy parameter */
   pba->deg_ncdm_default = 1.;
   pba->deg_ncdm = NULL;

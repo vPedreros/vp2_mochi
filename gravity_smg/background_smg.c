@@ -346,11 +346,14 @@ int background_gravity_functions_smg(
 	//TODO: need to define menaingfully -> separate early universe (IC, BBN...) from late (Halofit...)
 	//BUG: causes problem with halofit!, if not, causes bug with Brans-Dicke
 	*ptr_rho_de += pvecback[pba->index_bg_rho_smg];
-
+  	
+  	/* vp: Modified for CONCEPT*/
 	/** - compute w_smg */
 	if (pba->rho_evolution_smg == _FALSE_ && pba->expansion_model_smg != wext && pba->expansion_model_smg != rho_de) {
 		pvecback[pba->index_bg_w_smg] = pvecback[pba->index_bg_p_smg] / pvecback[pba->index_bg_rho_smg];
+		pvecback[pba->index_bg_w_prime_smg] = pvecback[pba->index_bg_p_prime_smg]/pvecback[pba->index_bg_rho_smg] - pvecback[pba->index_bg_p_smg]*pvecback[pba->index_bg_rho_prime_smg]/pow(pvecback[pba->index_bg_rho_smg],2.);
 	}
+	/* vp: Modified for ^CONCEPT^*/
 
   return _SUCCESS_;
 
@@ -419,6 +422,9 @@ int background_define_indices_bg_smg(
 	class_define_index(pba->index_bg_p_smg,_TRUE_,*index_bg,1);
 	class_define_index(pba->index_bg_rho_prime_smg,pba->rho_evolution_smg == _TRUE_,*index_bg,1);
 	class_define_index(pba->index_bg_w_smg,_TRUE_,*index_bg,1);
+	/*vp: Modified for CONCEPT*/
+	class_define_index(pba->index_bg_w_prime_smg,_TRUE_,*index_bg,1);
+	/*vp: Modified for ^CONCEPT^*/
 	class_define_index(pba->index_bg_current_smg,pba->field_evolution_smg == _TRUE_,*index_bg,1);
 	class_define_index(pba->index_bg_shift_smg,pba->field_evolution_smg == _TRUE_,*index_bg,1);
 

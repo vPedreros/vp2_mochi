@@ -109,6 +109,15 @@ struct background
                                             T_ncdm1/T_gamma; and its default value */
   double * ksi_ncdm, ksi_ncdm_default;   /**< list of 2nd parameters in p-s-d of non-cold relics: relative chemical potential
                                             ksi_ncdm1/T_ncdm1; and its default value */
+
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  double * growthfac_contrib_ncdm;  /**< ncdm contribution factors for growth factors */
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
+  
   double * deg_ncdm, deg_ncdm_default;    /**< vector of degeneracy parameters in factor of p-s-d: 1 for one family of neutrinos
                                              (= one neutrino plus its anti-neutrino, total g*=1+1=2, so deg = 0.5 g*); and its
                                              default value */
@@ -414,6 +423,9 @@ struct background
   int index_bg_p_tot_wo_prime_prime_smg; /**< second derivative of the total pressure minus scalar field (necessary for QSA in stable parametrization) */
   int index_bg_p_prime_prime_smg; /**< second derivative of the pressure of the scalar field (necessary for QSA in stable parametrization) */
   int index_bg_w_smg; /**< equation of state of the scalar field */
+  /*vp: Modified for CONCEPT*/
+  int index_bg_w_prime_smg; /**< derivate of equation of state of the scalar field */
+  /*vp: Modified for ^CONCEPT^*/
   int index_bg_mu_p_smg; /**< mu_p in EFE QSA eq. 3.2 in 2011.05713*/
   int index_bg_mu_inf_smg; /**< mu_infinity in EFE QSA eq. 4.1 in 2011.05713*/
   int index_bg_muZ_inf_smg; /**< mu_{Z,infinity} in EFE QSA eq. 4.2 in 2011.05713*/
@@ -448,6 +460,21 @@ struct background
 
   int index_bg_D;             /**< scale independent growth factor D(a) for CDM perturbations */
   int index_bg_f;             /**< corresponding velocity growth factor [dlnD]/[dln a] */
+
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  int index_bg_D2;   /**< second-order growth factor D2(a) */
+  int index_bg_f2;   /**< second-order growth rate f2(a) = [dlnD2]/[dlna] */
+  int index_bg_D3a;  /**< third-order growth factor D3a(a) */
+  int index_bg_f3a;  /**< third-order growth rate f3a(a) = [dlnD3a]/[dlna] */
+  int index_bg_D3b;  /**< third-order growth factor D3b(a) */
+  int index_bg_f3b;  /**< third-order growth rate f3b(a) = [dlnD3b]/[dlna] */
+  int index_bg_D3c;  /**< third-order growth factor D3c(a) */
+  int index_bg_f3c;  /**< third-order growth rate f3c(a) = [dlnD3c]/[dlna] */
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
 
   int index_bg_varc_alpha;    /**< value of fine structure constant in varying fundamental constants */
   int index_bg_varc_me;      /**< value of effective electron mass in varying fundamental constants */
@@ -584,6 +611,21 @@ struct background
   int index_bi_D;       /**< {C} scale independent growth factor D(a) for CDM perturbations. */
   int index_bi_D_prime; /**< {C} D satisfies \f$ [D''(\tau)=-aHD'(\tau)+3/2 a^2 \rho_M D(\tau) \f$ */
 
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  int index_bi_D2;        /**< {C} second-order growth factor D2(a) */
+  int index_bi_D2_prime;  /**< {C} D2 satisfies \f$ D2''(\tau) = -aHD2'(\tau) +     3/2 a^2 \rho_M (D2(\tau) + D^2(\tau)) \f$ */
+  int index_bi_D3a;        /**< {C} third-order growth factor D3a(a) */
+  int index_bi_D3a_prime;  /**< {C} D3a satisfies \f$ D3a''(\tau) = -aHD3a'(\tau) + 3/2 a^2 \rho_M (D3a(\tau) + 2D^3(\tau)) \f$ */
+  int index_bi_D3b;        /**< {C} third-order growth factor D3b(a) */
+  int index_bi_D3b_prime;  /**< {C} D3b satisfies \f$ D3b''(\tau) = -aHD3b'(\tau) + 3/2 a^2 \rho_M (D3b(\tau) + 2D(\tau)D2(\tau) + 2D^3(\tau)) \f$ */
+  int index_bi_D3c;        /**< {C} third-order growth factor D3c(a) */
+  int index_bi_D3c_prime;  /**< {C} D3c satisfies \f$ D3c''(\tau) = -aHD3c'(\tau) + 3/2 a^2 \rho_M D^3(\tau) \f$ */
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
+
   int bi_B_size;        /**< Number of {B} parameters */
   int bi_size;          /**< Number of {B}+{C} parameters */
   int bi_bw_B_size;     /** MC < Number of {B} parameters which have been integrated backward in time*/
@@ -645,6 +687,19 @@ struct background
   short background_verbose; /**< flag regulating the amount of information sent to standard output (none if set to zero) */
 
   ErrorMsg error_message; /**< zone for writing error messages */
+
+  /************************/
+  /* For use with CONCEPT */
+  /************************/
+  /**
+   * Used to set number of OpenMP threads and to print
+   * status updates during perturbation computations.
+   */
+  int node, num_threads;
+  char* message;
+  /**************************/
+  /* ^For use with CONCEPT^ */
+  /**************************/
 
   short is_allocated; /**< flag is set to true if allocated */
   //@}
@@ -908,12 +963,12 @@ extern "C" {
 
 //@{
 
-#define _Mpc_over_m_ 3.085677581282e22  /**< conversion factor from meters to megaparsecs */
+#define _Mpc_over_m_ 3.0856775814913676e+22  /**< conversion factor from meters to megaparsecs vp: mod for CONCEPT*/
 /* remark: CAMB uses 3.085678e22: good to know if you want to compare  with high accuracy */
 
-#define _Gyr_over_Mpc_ 3.06601394e2 /**< conversion factor from megaparsecs to gigayears
+#define _Gyr_over_Mpc_ 306.60139378555 /**< conversion factor from megaparsecs to gigayears vp: mod for CONCEPT
                                        (c=1 units, Julian years of 365.25 days) */
-#define _c_ 2.99792458e8            /**< c in m/s */
+#define _c_ 299792458.0            /**< c in m/s */
 #define _G_ 6.67428e-11             /**< Newton constant in m^3/Kg/s^2 */
 #define _eV_ 1.602176487e-19        /**< 1 eV expressed in J */
 

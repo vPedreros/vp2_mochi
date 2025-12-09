@@ -464,7 +464,6 @@ int perturbations_print_variables_smg(
                                       double * dataptr,
                                       int * ptr_storeidx
                                       ) {
-
   int storeidx = *ptr_storeidx;
 
   double mass2_qs=0., mass2_qs_p=0., rad2_qs=0., friction_qs=0., slope_qs=0.;
@@ -487,6 +486,37 @@ int perturbations_print_variables_smg(
   /**************************/
   /* ^For use with CONCEPT^ */
   /**************************/
+  /************************/
+	/* For use with CONCEPT */
+	/************************/
+	/**
+	 * Compute perturbation derivatives. This also ensures that the
+	 * ppw (and other) structs are up-to-date. This is important
+	 * when using the Runge-Kutta evolver, as this is otherwise
+	 * not taken care off correctly.
+	 */
+  // vp: Not sure if this should be here???
+  // class_call(
+  //   perturbations_derivs_smg(ppt, ppw, pv, dy, pvecmetric),
+  //   ppt->error_message,
+  //   ppt->error_message
+  // );
+  /**************************/
+	/* ^For use with CONCEPT^ */
+	/**************************/
+  
+  /************************/
+	/* For use with CONCEPT */
+	/************************/
+    /* Only return output at late times */
+  double a = ppw->pvecback[pba->index_bg_a];
+  double a_min = 3e-4;
+  if (a < a_min)
+    return _SUCCESS_;
+	/**************************/
+	/* ^For use with CONCEPT^ */
+	/**************************/
+
   perturbations_qs_functions_at_tau_and_k_qs_smg(
                                           ppr,
                                           pba,
