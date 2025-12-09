@@ -9380,7 +9380,16 @@ int perturbations_print_variables(double tau,
     }
     storeidx = 0;
     dataptr = ppt->scalar_perturbations_data[ppw->index_ikout]+
-      ppt->size_scalar_perturbation_data[ppw->index_ikout];
+    ppt->size_scalar_perturbation_data[ppw->index_ikout];
+    /************************/
+    /* For use with CONCEPT */
+    /************************/
+    if (pba->has_smg == _TRUE_) {
+      ppt->size_scalar_perturbation_data[ppw->index_ikout] += 3;
+    }
+    /**************************/
+    /* ^For use with CONCEPT^ */
+    /**************************/
     ppt->size_scalar_perturbation_data[ppw->index_ikout] += ppt->number_of_scalar_titles;
 
     class_store_double(dataptr, tau, _TRUE_, storeidx);
