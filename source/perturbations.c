@@ -9521,47 +9521,47 @@ int perturbations_print_variables(double tau,
      * Include H_T_prime (in N-body gauge) in perturbation output.
      * Here we make use of rho_plus_p_tot defined earlier.
      */
-    // double p_tot_prime = 0.0;
-    // /* Photons */
-    //  p_tot_prime += -3.*a*H*(1. + 1./3.)*1./3.*pvecback[pba->index_bg_rho_g];
-    // /* Baryons have no pressure */
-    // /* Ultra relativistic species */
-    // if (pba->has_ur == _TRUE_)
-    //   p_tot_prime += -3.*a*H*(1. + 1./3.)*1./3.*pvecback[pba->index_bg_rho_ur];
-    // /* Cold dark matter has no pressure */
-    // /* Non-cold dark matter */
-    // if (pba->has_ncdm == _TRUE_) {
-    //   for(n_ncdm=0; n_ncdm < pba->N_ncdm; n_ncdm++)
-    //     p_tot_prime += -a*H*(5.*pvecback[pba->index_bg_p_ncdm1+n_ncdm]
-    //     - pvecback[pba->index_bg_pseudo_p_ncdm1+n_ncdm]);
-    // }
-    // /* Decaying cold dark matter has no pressure */
-    // /* Decay radiation */
-    // if (pba->has_dr == _TRUE_)
-    //   p_tot_prime += -3.*a*H*(1. + 1./3.)*1./3.*pvecback[pba->index_bg_rho_dr]
-    //     + 1./3.*a*pba->Gamma_dcdm*pvecback[pba->index_bg_rho_dcdm];
-    // /* Dark energy fluid */
-    // if (pba->has_fld == _TRUE_) {
-    //   p_tot_prime += a*H*pvecback[pba->index_bg_rho_fld]
-    //     *(a*dw_over_da_fld - 3.*w_fld*(1. + w_fld));
-    // }
-    // /* vp: Scalar Modified Gravity smg */
-    // if (pba->has_smg == _TRUE_) {
-    //   p_tot_prime += a*H*pvecback[pba->index_bg_rho_smg]
-    //     *(pvecback[pba->index_bg_w_prime_smg]/a/H - 3.*pvecback[pba->index_bg_w_smg]*(1+pvecback[pba->index_bg_w_smg]));
-    // }
-    // /* Scalar field */
-    // if (pba->has_scf == _TRUE_) {
-    //   p_tot_prime += -H/a*pvecback[pba->index_bg_phi_prime_scf]
-    //     *pvecback[pba->index_bg_phi_prime_scf]
-    //     - 2./3.*pvecback[pba->index_bg_dV_scf]*pvecback[pba->index_bg_phi_prime_scf];
-    // }
-    // /* Lambda has constant pressure */
-    // double H_T_prime = 3.*a*H/rho_plus_p_tot*(
-    //   - ppw->delta_p - pvecback[pba->index_bg_p_smg]
-    //   + p_tot_prime*(theta_tot+ppw->pvecmetric[ppw->index_mt_theta_smg])/(k*k)
-    //   + ppw->rho_plus_p_shear + (pvecback[pba->index_bg_rho_smg] + pvecback[pba->index_bg_p_smg])*ppw->pvecmetric[ppw->index_mt_shear_smg]);
-    // class_store_double(dataptr, H_T_prime, _TRUE_, storeidx);
+    double p_tot_prime = 0.0;
+    /* Photons */
+     p_tot_prime += -3.*a*H*(1. + 1./3.)*1./3.*pvecback[pba->index_bg_rho_g];
+    /* Baryons have no pressure */
+    /* Ultra relativistic species */
+    if (pba->has_ur == _TRUE_)
+      p_tot_prime += -3.*a*H*(1. + 1./3.)*1./3.*pvecback[pba->index_bg_rho_ur];
+    /* Cold dark matter has no pressure */
+    /* Non-cold dark matter */
+    if (pba->has_ncdm == _TRUE_) {
+      for(n_ncdm=0; n_ncdm < pba->N_ncdm; n_ncdm++)
+        p_tot_prime += -a*H*(5.*pvecback[pba->index_bg_p_ncdm1+n_ncdm]
+        - pvecback[pba->index_bg_pseudo_p_ncdm1+n_ncdm]);
+    }
+    /* Decaying cold dark matter has no pressure */
+    /* Decay radiation */
+    if (pba->has_dr == _TRUE_)
+      p_tot_prime += -3.*a*H*(1. + 1./3.)*1./3.*pvecback[pba->index_bg_rho_dr]
+        + 1./3.*a*pba->Gamma_dcdm*pvecback[pba->index_bg_rho_dcdm];
+    /* Dark energy fluid */
+    if (pba->has_fld == _TRUE_) {
+      p_tot_prime += a*H*pvecback[pba->index_bg_rho_fld]
+        *(a*dw_over_da_fld - 3.*w_fld*(1. + w_fld));
+    }
+    /* vp: Scalar Modified Gravity smg */
+    if (pba->has_smg == _TRUE_) {
+      p_tot_prime += a*H*pvecback[pba->index_bg_rho_smg]
+        *(pvecback[pba->index_bg_w_prime_smg]/a/H - 3.*pvecback[pba->index_bg_w_smg]*(1+pvecback[pba->index_bg_w_smg]));
+    }
+    /* Scalar field */
+    if (pba->has_scf == _TRUE_) {
+      p_tot_prime += -H/a*pvecback[pba->index_bg_phi_prime_scf]
+        *pvecback[pba->index_bg_phi_prime_scf]
+        - 2./3.*pvecback[pba->index_bg_dV_scf]*pvecback[pba->index_bg_phi_prime_scf];
+    }
+    /* Lambda has constant pressure */
+    double H_T_prime = 3.*a*H/rho_plus_p_tot*(
+      - ppw->delta_p - pvecback[pba->index_bg_p_smg]
+      + p_tot_prime*(theta_tot+ppw->pvecmetric[ppw->index_mt_theta_smg])/(k*k)
+      + ppw->rho_plus_p_shear + (pvecback[pba->index_bg_rho_smg] + pvecback[pba->index_bg_p_smg])*ppw->pvecmetric[ppw->index_mt_shear_smg]);
+    class_store_double(dataptr, H_T_prime, _TRUE_, storeidx);
     /**************************/
     /* ^For use with CONCEPT^ */
     /**************************/
