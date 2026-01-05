@@ -107,6 +107,11 @@ INCLUDES += -I../gravity_smg/include
 EXTERNAL += input_smg.o background_smg.o perturbations_smg.o fourier_smg.o gravity_functions_smg.o gravity_models_smg.o
 endif
 
+# #vp: Add sanitiziers for debugging
+# CCFLAG += -O0 -g -fsanitize=address -fno-omit-frame-pointer
+# LDFLAG += -fsanitize=address
+
+
 vpath %.c $(HALOFIT)
 INCLUDES += -I../$(HALOFIT)
 EXTERNAL += halofit.o

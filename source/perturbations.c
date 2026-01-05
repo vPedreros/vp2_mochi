@@ -3514,6 +3514,12 @@ int perturbations_prepare_k_output(struct background * pba,
 
       ppt->number_of_scalar_titles =
         get_number_of_titles(ppt->scalar_titles);
+      
+      // gpt suggestions
+      if (pba->has_smg == _TRUE_) {
+        ppt->number_of_scalar_titles += 15;
+      }
+
     }
 
     if (ppt->has_tensors == _TRUE_){
