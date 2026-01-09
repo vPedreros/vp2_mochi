@@ -3515,12 +3515,6 @@ int perturbations_prepare_k_output(struct background * pba,
 
       ppt->number_of_scalar_titles =
         get_number_of_titles(ppt->scalar_titles);
-      
-      // gpt suggestions
-      if (pba->has_smg == _TRUE_) {
-        ppt->number_of_scalar_titles += 15;
-      }
-
     }
 
     if (ppt->has_tensors == _TRUE_){
@@ -9511,15 +9505,15 @@ int perturbations_print_variables(double tau,
     /* ^For use with CONCEPT^ */
     /**************************/
 
-    /************************/
-    /* For use with CONCEPT */
-    /************************/
-    /* Include h_prime in perturbation output */
-    class_store_double(dataptr, pvecmetric[ppw->index_mt_h_prime],
-      ppt->gauge == synchronous, storeidx);
-    /**************************/
-    /* ^For use with CONCEPT^ */
-    /**************************/
+    // /************************/
+    // /* For use with CONCEPT */
+    // /************************/
+    // /* Include h_prime in perturbation output */
+    // class_store_double(dataptr, pvecmetric[ppw->index_mt_h_prime],
+    //   ppt->gauge == synchronous, storeidx);
+    // /**************************/
+    // /* ^For use with CONCEPT^ */
+    // /**************************/
 
     /************************/
     /* For use with CONCEPT */
@@ -9588,6 +9582,13 @@ int perturbations_print_variables(double tau,
     class_store_double(dataptr, alpha_mt, ppt->gauge == synchronous, storeidx);
     class_store_double(dataptr, alpha_mt_prime, ppt->gauge == synchronous, storeidx);
     class_store_double(dataptr, ppw->pvecmetric[ppw->index_mt_einstein00], ppt->gauge == synchronous, storeidx);
+
+    /* gpt_debug */
+    if (storeidx != ppt->number_of_scalar_titles) {
+      fprintf(stderr,
+              "GPT debug: scalar output count mismatch (storeidx=%d number_of_scalar_titles=%d, k=%e, tau=%e, has_smg=%d, gauge=%d)\n",
+              storeidx, ppt->number_of_scalar_titles, k, tau, pba->has_smg, ppt->gauge);
+    }
 
   }
   /** - for tensor modes: */
