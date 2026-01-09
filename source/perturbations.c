@@ -1325,8 +1325,8 @@ int perturbations_indices(
           ppt->has_source_delta_dr = _TRUE_;
         if (pba->has_ncdm == _TRUE_)
           ppt->has_source_delta_ncdm = _TRUE_;
-        if(pba->has_smg == _TRUE_)
-          ppt->has_source_x_smg = _TRUE_;{
+        if(pba->has_smg == _TRUE_) {
+          ppt->has_source_x_smg = _TRUE_;
           /************************/
           /* For use with CONCEPT */
           /************************/
