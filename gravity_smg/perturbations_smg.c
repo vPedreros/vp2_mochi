@@ -512,18 +512,6 @@ int perturbations_print_variables_smg(
   /**************************/
 	/* ^For use with CONCEPT^ */
 	/**************************/
-  
-  /************************/
-	/* For use with CONCEPT */
-	/************************/
-    /* Only return output at late times */
-  double a = ppw->pvecback[pba->index_bg_a];
-  double a_min = 3e-4;
-  if (a < a_min)
-    return _SUCCESS_;
-	/**************************/
-	/* ^For use with CONCEPT^ */
-	/**************************/
 
   perturbations_qs_functions_at_tau_and_k_qs_smg(
                                           ppr,
