@@ -787,12 +787,19 @@ int perturbations_einstein_scalar_smg(
     /************************/
     /* For use with CONCEPT */
     /************************/
-    if ((ppw->pvecback[pba->index_bg_w_smg] == -1) || (ppw->pvecback[pba->index_bg_rho_smg] == 0)){
-      ppw->pvecmetric[ppw->index_mt_delta_smg] = 0; 
-    } 
+    /* Get scalar field perturbations */
+    if (ppw->approx[ppw->index_ap_gr_smg] == (int)gr_smg_on) {
+      /* Set delta_smg to 0 when GR approximation ON */
+      ppw->pvecmetric[ppw->index_mt_delta_smg] = 0.;
+    }
     else {
-      delta_rho_smg = ppw->delta_rho*(1.-M2)/M2 + H/6./a*bra*ppw->pvecmetric[ppw->index_mt_h_prime] - pow(H,2)/3*(3*bra+kin)*ppw->pv->y[ppw->pv->index_pt_x_prime_smg] - H/6/a*(2.*bra*pow(k,2)+(-18.+15.*bra+2.*kin)*rho_smg*pow(a, 2)+(-18.*DelM2+15.*bra*M2+2.*kin*M2)*rho_tot*pow(M2,-1)*pow(a, 2)+(-2.*DelM2+bra*M2)*9.*pow(M2,-1)*p_tot*pow(a, 2)+9.*(-2.+bra)*p_smg*pow(a, 2))*ppw->pv->y[ppw->pv->index_pt_x_smg];
-      ppw->pvecmetric[ppw->index_mt_delta_smg] = delta_rho_smg/ppw->pvecback[pba->index_bg_rho_smg];
+      if ((ppw->pvecback[pba->index_bg_w_smg] == -1) || (ppw->pvecback[pba->index_bg_rho_smg] == 0)){
+        ppw->pvecmetric[ppw->index_mt_delta_smg] = 0; 
+      } 
+      else {
+        delta_rho_smg = ppw->delta_rho*(1.-M2)/M2 + H/6./a*bra*ppw->pvecmetric[ppw->index_mt_h_prime] - pow(H,2)/3*(3*bra+kin)*ppw->pv->y[ppw->pv->index_pt_x_prime_smg] - H/6/a*(2.*bra*pow(k,2)+(-18.+15.*bra+2.*kin)*rho_smg*pow(a, 2)+(-18.*DelM2+15.*bra*M2+2.*kin*M2)*rho_tot*pow(M2,-1)*pow(a, 2)+(-2.*DelM2+bra*M2)*9.*pow(M2,-1)*p_tot*pow(a, 2)+9.*(-2.+bra)*p_smg*pow(a, 2))*ppw->pv->y[ppw->pv->index_pt_x_smg];
+        ppw->pvecmetric[ppw->index_mt_delta_smg] = delta_rho_smg/ppw->pvecback[pba->index_bg_rho_smg];
+      }
     }
     /**************************/
     /* ^For use with CONCEPT^ */
