@@ -9511,6 +9511,7 @@ int perturbations_print_variables(double tau,
         ppt->error_message,
         ppt->error_message
       );
+    }
     /************************/
     /* For use with CONCEPT */
     /************************/
@@ -9567,12 +9568,11 @@ int perturbations_print_variables(double tau,
         + p_tot_prime*(theta_tot)/(k*k)
         + ppw->rho_plus_p_shear);
     }
-      class_store_double(dataptr, H_T_prime, _TRUE_, storeidx);
+    class_store_double(dataptr, H_T_prime, _TRUE_, storeidx);
     /**************************/
     /* ^For use with CONCEPT^ */
     /**************************/
 
-    }
     class_store_double(dataptr, h_prime, ppt->gauge == synchronous, storeidx); // not only _smg
     class_store_double(dataptr, h_prime_prime, ppt->gauge == synchronous, storeidx);
     class_store_double(dataptr, eta, ppt->gauge == synchronous, storeidx);
