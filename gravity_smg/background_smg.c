@@ -1662,7 +1662,14 @@ int background_store_columntitles_smg(
   	class_store_columntitle(titles,"(.)p_smg",_TRUE_);
 	class_store_columntitle(titles,"(.)p_smg_prime",_TRUE_);
 	class_store_columntitle(titles,"(.)p_smg_prime_prime",_TRUE_);
-
+	/************************/
+	/* For use with CONCEPT */
+	/************************/
+	// vp: moved here to always output soundspeed
+	class_store_columntitle(titles,"cs2_smg",_TRUE_);
+	/**************************/
+	/* ^For use with CONCEPT^ */
+	/**************************/
 	if (pba->output_background_smg >= 1){
     class_store_columntitle(titles,"M*^2_smg",_TRUE_);
     class_store_columntitle(titles,"D_M*^2_smg",_TRUE_);
@@ -1671,7 +1678,6 @@ int background_store_columntitles_smg(
     class_store_columntitle(titles,"tensor_excess_smg",_TRUE_);
     class_store_columntitle(titles,"Mpl_running_smg",_TRUE_);
     class_store_columntitle(titles,"beyond_horndeski_smg",_TRUE_);
-    class_store_columntitle(titles,"c_s^2",_TRUE_);
     class_store_columntitle(titles,"kin (D)",_TRUE_);
     class_store_columntitle(titles,"Current",pba->field_evolution_smg);
     class_store_columntitle(titles,"Shift",pba->field_evolution_smg);
@@ -1802,6 +1808,14 @@ int background_output_data_smg(
   	class_store_double(dataptr,pvecback[pba->index_bg_p_smg],_TRUE_,storeidx);
 	class_store_double(dataptr,pvecback[pba->index_bg_p_prime_smg],_TRUE_,storeidx);
 	class_store_double(dataptr,pvecback[pba->index_bg_p_prime_prime_smg],_TRUE_,storeidx);
+	/************************/
+  	/* For use with CONCEPT */
+  	/************************/
+	// vp: moved here to always output soundspeed
+	class_store_double(dataptr,pvecback[pba->index_bg_cs2_smg],_TRUE_,storeidx);
+	/**************************/
+  	/* ^For use with CONCEPT^ */
+  	/**************************/
 
 	if (pba->output_background_smg >= 1){
 		class_store_double(dataptr,pvecback[pba->index_bg_M2_smg],_TRUE_,storeidx);
@@ -1811,7 +1825,6 @@ int background_output_data_smg(
 		class_store_double(dataptr,pvecback[pba->index_bg_tensor_excess_smg],_TRUE_,storeidx);
 		class_store_double(dataptr,pvecback[pba->index_bg_mpl_running_smg],_TRUE_,storeidx);
 		class_store_double(dataptr,pvecback[pba->index_bg_beyond_horndeski_smg],_TRUE_,storeidx);
-		class_store_double(dataptr,pvecback[pba->index_bg_cs2_smg],_TRUE_,storeidx);
 		class_store_double(dataptr,pvecback[pba->index_bg_kinetic_D_smg],_TRUE_,storeidx);
 		class_store_double(dataptr,pvecback[pba->index_bg_current_smg],pba->field_evolution_smg,storeidx);
 		class_store_double(dataptr,pvecback[pba->index_bg_shift_smg],pba->field_evolution_smg,storeidx);
