@@ -9505,16 +9505,6 @@ int perturbations_print_variables(double tau,
     /* ^For use with CONCEPT^ */
     /**************************/
 
-    // /************************/
-    // /* For use with CONCEPT */
-    // /************************/
-    // /* Include h_prime in perturbation output */
-    // class_store_double(dataptr, pvecmetric[ppw->index_mt_h_prime],
-    //   ppt->gauge == synchronous, storeidx);
-    // /**************************/
-    // /* ^For use with CONCEPT^ */
-    // /**************************/
-
     /************************/
     /* For use with CONCEPT */
     /************************/
