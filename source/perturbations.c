@@ -9504,7 +9504,13 @@ int perturbations_print_variables(double tau,
     /**************************/
     /* ^For use with CONCEPT^ */
     /**************************/
-
+    //fprintf(ppw->perturbations_output_file,"\n");
+    if (pba->has_smg == _TRUE_) {
+      class_call(
+        perturbations_print_variables_smg(ppr, pba, ppt,  ppw, k, tau, dataptr, &storeidx),
+        ppt->error_message,
+        ppt->error_message
+      );
     /************************/
     /* For use with CONCEPT */
     /************************/
@@ -9566,13 +9572,6 @@ int perturbations_print_variables(double tau,
     /* ^For use with CONCEPT^ */
     /**************************/
 
-    //fprintf(ppw->perturbations_output_file,"\n");
-    if (pba->has_smg == _TRUE_) {
-      class_call(
-        perturbations_print_variables_smg(ppr, pba, ppt,  ppw, k, tau, dataptr, &storeidx),
-        ppt->error_message,
-        ppt->error_message
-      );
     }
     class_store_double(dataptr, h_prime, ppt->gauge == synchronous, storeidx); // not only _smg
     class_store_double(dataptr, h_prime_prime, ppt->gauge == synchronous, storeidx);
