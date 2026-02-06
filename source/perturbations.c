@@ -9307,19 +9307,20 @@ int perturbations_print_variables(double tau,
     /************************/
     /* For use with CONCEPT */
     /************************/
+    /* metric perturbations (not only _smg) */
+    /*vp: moved out of if statement, otherwishe not initialised*/
+    h_prime = ppw->pvecmetric[ppw->index_mt_h_prime];
+    h_prime_prime = ppw->pvecmetric[ppw->index_mt_h_prime_prime];
+    eta = y[ppw->pv->index_pt_eta];
+    eta_prime = ppw->pvecmetric[ppw->index_mt_eta_prime];
+    alpha_mt = ppw->pvecmetric[ppw->index_mt_alpha];
+    alpha_mt_prime = ppw->pvecmetric[ppw->index_mt_alpha_prime];
+
     /* Do not convert to Newtonian gauge */
-    if (0 == 1) {  /* (ppt->gauge == synchronous) { */
+    if (0 == 1) { /* (ppt->gauge == synchronous) { */
     /**************************/
     /* ^For use with CONCEPT^ */
     /**************************/
-
-      /* metric perturbations (not only _smg) */
-      h_prime = ppw->pvecmetric[ppw->index_mt_h_prime];
-      h_prime_prime = ppw->pvecmetric[ppw->index_mt_h_prime_prime];
-      eta = y[ppw->pv->index_pt_eta];
-      eta_prime = ppw->pvecmetric[ppw->index_mt_eta_prime];
-      alpha_mt = ppw->pvecmetric[ppw->index_mt_alpha];
-      alpha_mt_prime = ppw->pvecmetric[ppw->index_mt_alpha_prime];
 
       /* density and velocity perturbations (comment out if you wish to keep synchronous variables) */
 
