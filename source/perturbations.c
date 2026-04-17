@@ -3495,15 +3495,6 @@ int perturbations_prepare_k_output(struct background * pba,
           ppt->error_message
         );
       }
-      /* Metric perturbations */
-      class_store_columntitle(ppt->scalar_titles,"h_prime",ppt->gauge == synchronous);
-      class_store_columntitle(ppt->scalar_titles,"h_prime_prime",ppt->gauge == synchronous);
-      class_store_columntitle(ppt->scalar_titles,"eta",ppt->gauge == synchronous);
-      class_store_columntitle(ppt->scalar_titles,"eta_prime",ppt->gauge == synchronous);
-      class_store_columntitle(ppt->scalar_titles,"alpha",ppt->gauge == synchronous);
-      class_store_columntitle(ppt->scalar_titles,"alpha_prime",ppt->gauge == synchronous);
-      class_store_columntitle(ppt->scalar_titles,"einstein00",ppt->gauge == synchronous); // not only _smg
-
       /************************/
       /* For use with CONCEPT */
       /************************/
@@ -3512,6 +3503,15 @@ int perturbations_prepare_k_output(struct background * pba,
       /**************************/
       /* ^For use with CONCEPT^ */
       /**************************/
+
+      /* Metric perturbations */
+      class_store_columntitle(ppt->scalar_titles,"h_prime",ppt->gauge == synchronous);
+      class_store_columntitle(ppt->scalar_titles,"h_prime_prime",ppt->gauge == synchronous);
+      class_store_columntitle(ppt->scalar_titles,"eta",ppt->gauge == synchronous);
+      class_store_columntitle(ppt->scalar_titles,"eta_prime",ppt->gauge == synchronous);
+      class_store_columntitle(ppt->scalar_titles,"alpha",ppt->gauge == synchronous);
+      class_store_columntitle(ppt->scalar_titles,"alpha_prime",ppt->gauge == synchronous);
+      class_store_columntitle(ppt->scalar_titles,"einstein00",ppt->gauge == synchronous); // not only _smg
 
       ppt->number_of_scalar_titles =
         get_number_of_titles(ppt->scalar_titles);
