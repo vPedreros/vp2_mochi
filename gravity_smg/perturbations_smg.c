@@ -984,13 +984,13 @@ int perturbations_einstein_scalar_smg(
       /************************/
       /* For use with CONCEPT */
       /************************/
-      if (ppw->pvecback[pba->index_bg_w_smg] == -1) {
-        ppw->pvecmetric[ppw->index_mt_theta_smg] = 0; 
-        } 
+      if (rho_smg == 0. || fabs(rho_smg + p_smg) < 1e-3 * rho_smg) {
+        ppw->pvecmetric[ppw->index_mt_theta_smg] = 0;
+        }
       else {
       // todo: fix this equation, but dont know how
         rho_plus_p_theta_smg = (1.-M2)/M2*rho_plus_p_theta_smg - 2.*k2/3/a2*(c0*a*H*res*ppw->pvecmetric[ppw->index_mt_x_smg]-0.5*cB*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
-        ppw->pvecmetric[ppw->index_mt_theta_smg] = rho_plus_p_theta_smg/(ppw->pvecback[pba->index_bg_rho_smg]+ppw->pvecback[pba->index_bg_p_smg]);
+        ppw->pvecmetric[ppw->index_mt_theta_smg] = rho_plus_p_theta_smg/(rho_smg + p_smg);
       }
       /**************************/
       /* ^For use with CONCEPT^ */
@@ -1004,12 +1004,12 @@ int perturbations_einstein_scalar_smg(
       /************************/
       /* For use with CONCEPT */
       /************************/
-      if (ppw->pvecback[pba->index_bg_w_smg] == -1) {
-        ppw->pvecmetric[ppw->index_mt_theta_smg] = 0; 
-        } 
+      if (rho_smg == 0. || fabs(rho_smg + p_smg) < 1e-3 * rho_smg) {
+        ppw->pvecmetric[ppw->index_mt_theta_smg] = 0;
+        }
       else {
         rho_plus_p_theta_smg = (1.-M2)/M2*rho_plus_p_theta_smg - 2.*k2/3/a2*(c0*a*H*res*ppw->pvecmetric[ppw->index_mt_x_smg]-0.5*cB*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
-        ppw->pvecmetric[ppw->index_mt_theta_smg] = rho_plus_p_theta_smg/(ppw->pvecback[pba->index_bg_rho_smg]+ppw->pvecback[pba->index_bg_p_smg]);
+        ppw->pvecmetric[ppw->index_mt_theta_smg] = rho_plus_p_theta_smg/(rho_smg + p_smg);
       }
       /**************************/
       /* ^For use with CONCEPT^ */
@@ -1135,12 +1135,12 @@ int perturbations_einstein_scalar_smg(
       /************************/
       /* For use with CONCEPT */
       /************************/
-      if (ppw->pvecback[pba->index_bg_w_smg] == -1) {
-        ppw->pvecmetric[ppw->index_mt_shear_smg] = 0; 
-        } 
+      if (rho_smg == 0. || fabs(rho_smg + p_smg) < 1e-3 * rho_smg) {
+        ppw->pvecmetric[ppw->index_mt_shear_smg] = 0;
+        }
       else {
         rho_plus_p_shear_smg = (mu-1)*ppw->rho_plus_p_shear + 2*k2/9/a2*(gamma-1)*(ppw->pvecmetric[ppw->index_mt_alpha_prime] + a*H*alpha);
-        ppw->pvecmetric[ppw->index_mt_shear_smg] = rho_plus_p_shear_smg/(ppw->pvecback[pba->index_bg_rho_smg]+ppw->pvecback[pba->index_bg_p_smg]);
+        ppw->pvecmetric[ppw->index_mt_shear_smg] = rho_plus_p_shear_smg/(rho_smg + p_smg);
       }
       /**************************/
       /* ^For use with CONCEPT^ */
@@ -1156,12 +1156,12 @@ int perturbations_einstein_scalar_smg(
       /************************/
       /* For use with CONCEPT */
       /************************/
-      if (ppw->pvecback[pba->index_bg_w_smg] == -1) {
-        ppw->pvecmetric[ppw->index_mt_shear_smg] = 0; 
-        } 
+      if (rho_smg == 0. || fabs(rho_smg + p_smg) < 1e-3 * rho_smg) {
+        ppw->pvecmetric[ppw->index_mt_shear_smg] = 0;
+        }
       else {
         rho_plus_p_shear_smg = (1-M2)/M2*ppw->rho_plus_p_shear - 2*k2/9/a2*(ten*ppw->pvecmetric[ppw->index_mt_eta] - run*a*H*ppw->pvecmetric[ppw->index_mt_alpha]-c8*res*ppw->pvecmetric[ppw->index_mt_x_smg] +cH/a/H*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
-        ppw->pvecmetric[ppw->index_mt_shear_smg] = rho_plus_p_shear_smg/(ppw->pvecback[pba->index_bg_rho_smg]+ppw->pvecback[pba->index_bg_p_smg]);
+        ppw->pvecmetric[ppw->index_mt_shear_smg] = rho_plus_p_shear_smg/(rho_smg + p_smg);
       }
       /**************************/
       /* ^For use with CONCEPT^ */
