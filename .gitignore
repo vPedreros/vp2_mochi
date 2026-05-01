@@ -17,5 +17,3 @@ doc/manual/latex
 *.gch
 python/dist/
 python/classy.egg-info/
-analysis/test_claude.ipynb
-analysis/test_claude.ipynb
