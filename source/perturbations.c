@@ -1234,6 +1234,7 @@ int perturbations_indices(
   /* For use with CONCEPT */
   /************************/
   ppt->has_source_delta_smg = _FALSE_;
+  ppt->has_source_delta_p_smg = _FALSE_;
   ppt->has_source_theta_smg = _FALSE_;
   ppt->has_source_shear_smg = _FALSE_;
   /**************************/
@@ -1331,6 +1332,7 @@ int perturbations_indices(
           /* For use with CONCEPT */
           /************************/
           ppt->has_source_delta_smg = _TRUE_;
+          ppt->has_source_delta_p_smg = _TRUE_;
           ppt->has_source_theta_smg = _TRUE_;
           ppt->has_source_shear_smg = _TRUE_;
           /**************************/
@@ -8715,6 +8717,9 @@ int perturbations_sources(
     if(ppt->has_source_delta_smg == _TRUE_) {
       _set_source_(ppt->index_tp_delta_smg) = pvecmetric[ppw->index_mt_delta_smg];
     }
+    if(ppt->has_source_delta_p_smg == _TRUE_) {
+      _set_source_(ppt->index_tp_delta_p_smg) = pvecmetric[ppw->index_mt_delta_p_smg];
+    }
     if(ppt->has_source_theta_smg == _TRUE_) { 
       _set_source_(ppt->index_tp_theta_smg) = pvecmetric[ppw->index_mt_theta_smg];
     }
@@ -9559,7 +9564,7 @@ int perturbations_print_variables(double tau,
     double H_T_prime;
     if (pba->has_smg == _TRUE_) {
       H_T_prime = 3.*a*H/rho_plus_p_tot*(
-        - ppw->delta_p - pvecback[pba->index_bg_p_smg]
+        - ppw->delta_p - ppw->pvecmetric[ppw->index_mt_delta_p_smg]
         + p_tot_prime*(theta_tot+ppw->pvecmetric[ppw->index_mt_theta_smg])/(k*k)
         + ppw->rho_plus_p_shear + (pvecback[pba->index_bg_rho_smg] + pvecback[pba->index_bg_p_smg])*ppw->pvecmetric[ppw->index_mt_shear_smg]);
     }

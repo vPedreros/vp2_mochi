@@ -302,6 +302,7 @@ int perturbations_define_indices_tp_smg(
   /* For use with CONCEPT */
   /************************/
   class_define_index(ppt->index_tp_delta_smg, ppt->has_source_delta_smg, *index_type,1);
+  class_define_index(ppt->index_tp_delta_p_smg, ppt->has_source_delta_p_smg, *index_type,1);
   class_define_index(ppt->index_tp_theta_smg, ppt->has_source_theta_smg, *index_type,1);
   class_define_index(ppt->index_tp_shear_smg, ppt->has_source_shear_smg, *index_type,1);
   /**************************/
@@ -333,6 +334,7 @@ int perturbations_define_indices_mt_smg(
   /************************/
   // vp: to have delta_smg, theta_smg and sigma_smg:
   class_define_index(ppw->index_mt_delta_smg, _TRUE_, *index_mt,1);
+  class_define_index(ppw->index_mt_delta_p_smg, _TRUE_, *index_mt,1);
   class_define_index(ppw->index_mt_theta_smg, _TRUE_, *index_mt,1);
   class_define_index(ppw->index_mt_shear_smg, _TRUE_, *index_mt,1);
   /**************************/
@@ -489,6 +491,7 @@ int perturbations_print_variables_smg(
   /************************/
   // vp: to have delta_smg, theta_smg and sigma_smg:
   double delta_smg = ppw->pvecmetric[ppw->index_mt_delta_smg];
+  double delta_p_smg = ppw->pvecmetric[ppw->index_mt_delta_p_smg];
   double theta_smg = ppw->pvecmetric[ppw->index_mt_theta_smg];
   double shear_smg = ppw->pvecmetric[ppw->index_mt_shear_smg];
   /**************************/
@@ -988,7 +991,6 @@ int perturbations_einstein_scalar_smg(
         ppw->pvecmetric[ppw->index_mt_theta_smg] = 0;
         }
       else {
-      // todo: fix this equation, but dont know how
         rho_plus_p_theta_smg = (1.-M2)/M2*rho_plus_p_theta_smg - 2.*k2/3/a2*(c0*a*H*res*ppw->pvecmetric[ppw->index_mt_x_smg]-0.5*cB*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
         ppw->pvecmetric[ppw->index_mt_theta_smg] = rho_plus_p_theta_smg/(rho_smg + p_smg);
       }
@@ -1046,6 +1048,13 @@ int perturbations_einstein_scalar_smg(
       - 2. * a_prime_over_a * ppw->pvecmetric[ppw->index_mt_h_prime]
       + 2. * k2 * ppw->pvecmetric[ppw->index_mt_eta]
       - 9. * pow(a,2) * ppw->delta_p;
+    /************************/
+    /* For use with CONCEPT */
+    /************************/
+    ppw->pvecmetric[ppw->index_mt_delta_p_smg] = 0.;
+    /**************************/
+    /* ^For use with CONCEPT^ */
+    /**************************/
   }
   else {
     ppw->pvecmetric[ppw->index_mt_h_prime_prime] =
@@ -1063,6 +1072,31 @@ int perturbations_einstein_scalar_smg(
         + c7*k2 + c6*pow(a*H,2)
       )*ppw->pvecmetric[ppw->index_mt_x_smg]
     )/cD;
+    /************************/
+    /* For use with CONCEPT */
+    /************************/
+    if (rho_smg == 0. || fabs(rho_smg + p_smg) < 1e-3 * rho_smg) {
+        ppw->pvecmetric[ppw->index_mt_delta_p_smg] = 0.;
+        }
+    else{
+      ppw->pvecmetric[ppw->index_mt_delta_p_smg] = -2*a_prime_over_a* ppw->pvecmetric[ppw->index_mt_h_prime]/9/pow(a,2) + 2*k2*ppw->pvecmetric[ppw->index_mt_eta]/9/pow(a,2) + (
+      - 9.*cK*ppw->delta_p*pow(a,2)/M2
+      + 2.*c1*k2*ppw->pvecmetric[ppw->index_mt_eta]
+      + a*H*(
+        + c2 + c3*k2*pow(a*H,-2)
+      )*ppw->pvecmetric[ppw->index_mt_h_prime]
+      - 2.*c3*pow(k2,2)*ppw->pvecmetric[ppw->index_mt_alpha]/a/H
+      - res*a*H*(
+        + c4 + 2.*c5*k2*pow(a*H,-2)
+      )*ppw->pvecmetric[ppw->index_mt_x_prime_smg]
+      - res*(
+        + c7*k2 + c6*pow(a*H,2)
+      )*ppw->pvecmetric[ppw->index_mt_x_smg]
+    )/cD/9/pow(a,2);
+    }
+    /**************************/
+    /* ^For use with CONCEPT^ */
+    /**************************/
   }
 
   /* This corrects the third equation using the Einstein 00. It has to be

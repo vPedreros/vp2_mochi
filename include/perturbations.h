@@ -318,6 +318,7 @@ struct perturbations
   /************************/
   /*vp: Needed to output delta_smg and theta_smg*/
   short has_source_delta_smg;
+  short has_source_delta_p_smg;
   short has_source_theta_smg;
   short has_source_shear_smg;
   /**************************/
@@ -381,6 +382,7 @@ struct perturbations
   /* For use with CONCEPT */
   /************************/
   int index_tp_delta_smg;
+  int index_tp_delta_p_smg;
   int index_tp_theta_smg;
   int index_tp_shear_smg;
   /************************/
@@ -581,6 +583,7 @@ struct perturbations_vector
   /* For use with CONCEPT */
   /************************/
   int index_pt_delta_smg;  /**< dark energy density in true smg case */
+  int index_pt_delta_p_smg;  /**< dark energy pressure in true smg case */
   int index_pt_theta_smg;  /**< dark energy velocity in true smg case */
   int index_pt_shear_smg;  /**< dark energy velocity in true smg case */
   /************************/
@@ -668,6 +671,7 @@ struct perturbations_workspace
   /* For use with CONCEPT */
   /************************/
   int index_mt_delta_smg;
+  int index_mt_delta_p_smg;
   int index_mt_theta_smg;
   int index_mt_shear_smg;
   /************************/
