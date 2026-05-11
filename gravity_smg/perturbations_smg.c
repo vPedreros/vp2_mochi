@@ -1194,7 +1194,9 @@ int perturbations_einstein_scalar_smg(
         ppw->pvecmetric[ppw->index_mt_shear_smg] = 0;
         }
       else {
-        rho_plus_p_shear_smg = (1-M2)/M2*ppw->rho_plus_p_shear - 2*k2/9/a2*(ten*ppw->pvecmetric[ppw->index_mt_eta] - run*a*H*ppw->pvecmetric[ppw->index_mt_alpha]-c8*res*ppw->pvecmetric[ppw->index_mt_x_smg] +cH/a/H*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
+        rho_plus_p_shear_smg = (1-M2)/M2*ppw->rho_plus_p_shear - 2*k2/9/a2*(ten*ppw->pvecmetric[ppw->index_mt_eta]
+                              - run*a*H*ppw->pvecmetric[ppw->index_mt_alpha]-c8*res*ppw->pvecmetric[ppw->index_mt_x_smg] 
+                              + cH/a/H*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
         ppw->pvecmetric[ppw->index_mt_shear_smg] = rho_plus_p_shear_smg/(rho_smg + p_smg);
       }
       /**************************/
