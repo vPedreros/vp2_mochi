@@ -627,7 +627,13 @@ int perturbations_get_h_prime_ic_from_00_smg(
   double kin = ppw->pvecback[pba->index_bg_kineticity_smg];
   double bra = ppw->pvecback[pba->index_bg_braiding_smg];
   /* TODO_EB: rewrite this equation with new variables */
-  ppw->pv->y[ppw->pv->index_pt_h_prime_from_trace] = (-4. * pow(H, -1) * pow(k, 2) * eta / a - 6. * pow(H, -1) * pow(M2, -1) * delta_rho_tot * a + 2. * H * (3. * bra + kin) * ppw->pv->y[ppw->pv->index_pt_x_prime_smg] * a + (2. * bra * pow(k, 2) + (-18. + 15. * bra + 2. * kin) * rho_smg * pow(a, 2) + (-18. * DelM2 + 15. * bra * M2 + 2. * kin * M2) * rho_tot * pow(M2, -1) * pow(a, 2) + (-2. * DelM2 + bra * M2) * 9. * pow(M2, -1) * p_tot * pow(a, 2) + 9. * (-2. + bra) * p_smg * pow(a, 2)) * ppw->pv->y[ppw->pv->index_pt_x_smg]) * pow(-2. + bra, -1);
+  ppw->pv->y[ppw->pv->index_pt_h_prime_from_trace] = (-4. * pow(H, -1) * pow(k, 2) * eta / a 
+                                                    - 6. * pow(H, -1) * pow(M2, -1) * delta_rho_tot * a 
+                                                    + 2. * H * (3. * bra + kin) * ppw->pv->y[ppw->pv->index_pt_x_prime_smg] * a 
+                                                    + (2. * bra * pow(k, 2) + (-18. + 15. * bra + 2. * kin) * rho_smg * pow(a, 2) 
+                                                    + (-18. * DelM2 + 15. * bra * M2 + 2. * kin * M2) * rho_tot * pow(M2, -1) * pow(a, 2) 
+                                                    + (-2. * DelM2 + bra * M2) * 9. * pow(M2, -1) * p_tot * pow(a, 2) 
+                                                    + 9. * (-2. + bra) * p_smg * pow(a, 2)) * ppw->pv->y[ppw->pv->index_pt_x_smg]) * pow(-2. + bra, -1);
 
   return _SUCCESS_;
 }
@@ -790,7 +796,7 @@ int perturbations_einstein_scalar_smg(
     /************************/
     /* For use with CONCEPT */
     /************************/
-    /* Get scalar field perturbations */
+    /* Get delta_smg perturbation */
     if (ppw->approx[ppw->index_ap_gr_smg] == (int)gr_smg_on) {
       /* Set delta_smg to 0 when GR approximation ON */
       ppw->pvecmetric[ppw->index_mt_delta_smg] = 0.;
@@ -800,8 +806,14 @@ int perturbations_einstein_scalar_smg(
         ppw->pvecmetric[ppw->index_mt_delta_smg] = 0; 
       } 
       else {
-        delta_rho_smg = ppw->delta_rho*(1.-M2)/M2 + H/6./a*bra*ppw->pvecmetric[ppw->index_mt_h_prime] - pow(H,2)/3*(3*bra+kin)*ppw->pv->y[ppw->pv->index_pt_x_prime_smg] - H/6/a*(2.*bra*pow(k,2)+(-18.+15.*bra+2.*kin)*rho_smg*pow(a, 2)+(-18.*DelM2+15.*bra*M2+2.*kin*M2)*rho_tot*pow(M2,-1)*pow(a, 2)+(-2.*DelM2+bra*M2)*9.*pow(M2,-1)*p_tot*pow(a, 2)+9.*(-2.+bra)*p_smg*pow(a, 2))*ppw->pv->y[ppw->pv->index_pt_x_smg];
+        // delta_rho_smg = ppw->delta_rho*(1.-M2)/M2 + H/6./a*bra*ppw->pvecmetric[ppw->index_mt_h_prime] - pow(H,2)/3*(3*bra+kin)*ppw->pv->y[ppw->pv->index_pt_x_prime_smg] - H/6/a*(2.*bra*pow(k,2)+(-18.+15.*bra+2.*kin)*rho_smg*pow(a, 2)+(-18.*DelM2+15.*bra*M2+2.*kin*M2)*rho_tot*pow(M2,-1)*pow(a, 2)+(-2.*DelM2+bra*M2)*9.*pow(M2,-1)*p_tot*pow(a, 2)+9.*(-2.+bra)*p_smg*pow(a, 2))*ppw->pv->y[ppw->pv->index_pt_x_smg];
+        delta_rho_smg = H*M2/3/a * (bra/2*ppw->pvecmetric[ppw->index_mt_h_prime] - a*H*(kin +3*bra)*ppw->pv->y[ppw->pv->index_pt_x_prime_smg]
+                                      - (2. * bra * pow(k, 2) + (-18. + 15. * bra + 2. * kin) * rho_smg * pow(a, 2) 
+                                      + (-18. * DelM2 + 15. * bra * M2 + 2. * kin * M2) * rho_tot * pow(M2, -1) * pow(a, 2) 
+                                      + (-2. * DelM2 + bra * M2) * 9. * pow(M2, -1) * p_tot * pow(a, 2) 
+                                      + 9. * (-2. + bra) * p_smg * pow(a, 2))*ppw->pv->y[ppw->pv->index_pt_x_smg]/2 );
         ppw->pvecmetric[ppw->index_mt_delta_smg] = delta_rho_smg/ppw->pvecback[pba->index_bg_rho_smg];
+        
       }
     }
     /**************************/
