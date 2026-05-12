@@ -9550,10 +9550,10 @@ int perturbations_print_variables(double tau,
         *(a*dw_over_da_fld - 3.*w_fld*(1. + w_fld));
     }
     /* vp: Scalar Modified Gravity smg */
-    // if (pba->has_smg == _TRUE_) {
-    //   p_tot_prime += a*H*pvecback[pba->index_bg_rho_smg]
-    //     *(pvecback[pba->index_bg_w_prime_smg]/a/H - 3.*pvecback[pba->index_bg_w_smg]*(1+pvecback[pba->index_bg_w_smg]));
-    // }
+    if (pba->has_smg == _TRUE_) {
+      p_tot_prime += a*H*pvecback[pba->index_bg_rho_smg]
+        *(pvecback[pba->index_bg_w_prime_smg]/a/H - 3.*pvecback[pba->index_bg_w_smg]*(1+pvecback[pba->index_bg_w_smg]));
+    }
     /* Scalar field */
     if (pba->has_scf == _TRUE_) {
       p_tot_prime += -H/a*pvecback[pba->index_bg_phi_prime_scf]
