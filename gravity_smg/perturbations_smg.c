@@ -1004,7 +1004,7 @@ int perturbations_einstein_scalar_smg(
         ppw->pvecmetric[ppw->index_mt_theta_smg] = 0;
         }
       else {
-        rho_plus_p_theta_smg = (1.-M2)/M2*rho_plus_p_theta_smg - 2.*k2/3/a2*(c0*a*H*res*ppw->pvecmetric[ppw->index_mt_x_smg]-0.5*cB*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
+        rho_plus_p_theta_smg = (1.-M2)/M2*ppw->rho_plus_p_theta - 2.*k2/3/a2*(c0*a*H*res*ppw->pvecmetric[ppw->index_mt_x_smg]-0.5*cB*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
         ppw->pvecmetric[ppw->index_mt_theta_smg] = rho_plus_p_theta_smg/(rho_smg + p_smg);
       }
       /**************************/
@@ -1023,7 +1023,7 @@ int perturbations_einstein_scalar_smg(
         ppw->pvecmetric[ppw->index_mt_theta_smg] = 0;
         }
       else {
-        rho_plus_p_theta_smg = (1.-M2)/M2*rho_plus_p_theta_smg - 2.*k2/3/a2*(c0*a*H*res*ppw->pvecmetric[ppw->index_mt_x_smg]-0.5*cB*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
+        rho_plus_p_theta_smg = (1.-M2)/M2*ppw->rho_plus_p_theta - 2.*k2/3/a2*(c0*a*H*res*ppw->pvecmetric[ppw->index_mt_x_smg]-0.5*cB*res*ppw->pvecmetric[ppw->index_mt_x_prime_smg]);
         ppw->pvecmetric[ppw->index_mt_theta_smg] = rho_plus_p_theta_smg/(rho_smg + p_smg);
       }
       /**************************/
@@ -1174,7 +1174,7 @@ int perturbations_einstein_scalar_smg(
     /**************************/
   }
   else {
-    /*vp: disable QSA*/
+    /* vp: Do not use QSA approximation for this equation. */
     if (0 == 1) { // (pba->gravity_model_smg == stable_params && qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == _TRUE_){
       // MGCAMB QSA alpha' = phi + psi - eta
       ppw->pvecmetric[ppw->index_mt_alpha_prime] = 
