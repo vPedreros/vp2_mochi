@@ -1174,7 +1174,8 @@ int perturbations_einstein_scalar_smg(
     /**************************/
   }
   else {
-    if(pba->gravity_model_smg == stable_params && qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == _TRUE_){
+    /*vp: disable QSA*/
+    if (0 == 1) { // (pba->gravity_model_smg == stable_params && qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == _TRUE_){
       // MGCAMB QSA alpha' = phi + psi - eta
       ppw->pvecmetric[ppw->index_mt_alpha_prime] = 
        -1.5*a2/k2*mu*(1+gamma)*rho_Delta 
