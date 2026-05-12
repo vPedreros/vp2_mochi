@@ -9504,7 +9504,7 @@ int perturbations_print_variables(double tau,
     /* For use with CONCEPT */
     /************************/
     /* Include theta_tot in perturbation output */
-    double rho_plus_p_tot = -2./3.*pvecback[pba->index_bg_H_prime]/a + 2./3.*pba->K/(a*a);
+    double rho_plus_p_tot = ppw->rho_plus_p_tot; //-2./3.*pvecback[pba->index_bg_H_prime]/a + 2./3.*pba->K/(a*a);
     double theta_tot = ppw->rho_plus_p_theta/rho_plus_p_tot;
     class_store_double(dataptr, theta_tot, _TRUE_, storeidx);
     /**************************/
@@ -9550,10 +9550,10 @@ int perturbations_print_variables(double tau,
         *(a*dw_over_da_fld - 3.*w_fld*(1. + w_fld));
     }
     /* vp: Scalar Modified Gravity smg */
-    if (pba->has_smg == _TRUE_) {
-      p_tot_prime += a*H*pvecback[pba->index_bg_rho_smg]
-        *(pvecback[pba->index_bg_w_prime_smg]/a/H - 3.*pvecback[pba->index_bg_w_smg]*(1+pvecback[pba->index_bg_w_smg]));
-    }
+    // if (pba->has_smg == _TRUE_) {
+    //   p_tot_prime += a*H*pvecback[pba->index_bg_rho_smg]
+    //     *(pvecback[pba->index_bg_w_prime_smg]/a/H - 3.*pvecback[pba->index_bg_w_smg]*(1+pvecback[pba->index_bg_w_smg]));
+    // }
     /* Scalar field */
     if (pba->has_scf == _TRUE_) {
       p_tot_prime += -H/a*pvecback[pba->index_bg_phi_prime_scf]
@@ -9562,21 +9562,21 @@ int perturbations_print_variables(double tau,
     }
     /* Lambda has constant pressure */
     double H_T_prime;
-    H_T_prime = 3*a*H/ppw->rho_plus_p_tot*(-ppw->delta_p+
-                                                           pvecback[pba->index_bg_p_tot_prime]*ppw->rho_plus_p_theta/ppw->rho_plus_p_tot/k/k+
-                                                           ppw->rho_plus_p_shear);
-    // if (pba->has_smg == _TRUE_) {
-    //   H_T_prime = 3.*a*H/rho_plus_p_tot*(
-    //     - ppw->delta_p - ppw->pvecmetric[ppw->index_mt_delta_p_smg]
-    //     + p_tot_prime*(theta_tot+ppw->pvecmetric[ppw->index_mt_theta_smg])/(k*k)
-    //     + ppw->rho_plus_p_shear + (pvecback[pba->index_bg_rho_smg] + pvecback[pba->index_bg_p_smg])*ppw->pvecmetric[ppw->index_mt_shear_smg]);
-    // }
-    // else {
-    //   H_T_prime = 3.*a*H/rho_plus_p_tot*(
-    //     - ppw->delta_p
-    //     + p_tot_prime*(theta_tot)/(k*k)
-    //     + ppw->rho_plus_p_shear);
-    // }
+    // H_T_prime = 3*a*H/ppw->rho_plus_p_tot*(-ppw->delta_p+
+    //                                                        pvecback[pba->index_bg_p_tot_prime]*ppw->rho_plus_p_theta/ppw->rho_plus_p_tot/k/k+
+    //                                                        ppw->rho_plus_p_shear);
+    if (pba->has_smg == _TRUE_) {
+      H_T_prime = 3.*a*H/rho_plus_p_tot*(
+        - ppw->delta_p - ppw->pvecmetric[ppw->index_mt_delta_p_smg]
+        + p_tot_prime*(theta_tot+ppw->pvecmetric[ppw->index_mt_theta_smg])/(k*k)
+        + ppw->rho_plus_p_shear + (pvecback[pba->index_bg_rho_smg] + pvecback[pba->index_bg_p_smg])*ppw->pvecmetric[ppw->index_mt_shear_smg]);
+    }
+    else {
+      H_T_prime = 3.*a*H/rho_plus_p_tot*(
+        - ppw->delta_p
+        + p_tot_prime*(theta_tot)/(k*k)
+        + ppw->rho_plus_p_shear);
+    }
     class_store_double(dataptr, H_T_prime, _TRUE_, storeidx);
     /**************************/
     /* ^For use with CONCEPT^ */
@@ -9589,13 +9589,6 @@ int perturbations_print_variables(double tau,
     class_store_double(dataptr, alpha_mt, ppt->gauge == synchronous, storeidx);
     class_store_double(dataptr, alpha_mt_prime, ppt->gauge == synchronous, storeidx);
     class_store_double(dataptr, ppw->pvecmetric[ppw->index_mt_einstein00], ppt->gauge == synchronous, storeidx);
-
-    /* gpt_debug */
-    if (storeidx != ppt->number_of_scalar_titles) {
-      fprintf(stderr,
-              "GPT debug: scalar output count mismatch (storeidx=%d number_of_scalar_titles=%d, k=%e, tau=%e, has_smg=%d, gauge=%d)\n",
-              storeidx, ppt->number_of_scalar_titles, k, tau, pba->has_smg, ppt->gauge);
-    }
 
   }
   /** - for tensor modes: */
