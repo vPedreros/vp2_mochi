@@ -988,7 +988,8 @@ int perturbations_einstein_scalar_smg(
     /**************************/
   }
   else {
-    if (pba->gravity_model_smg == stable_params && qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == _TRUE_) {  
+    /* vp: Do not use QSA approximation for this equation. */
+    if (0 == 1) { //(pba->gravity_model_smg == stable_params && qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == _TRUE_) {  
       /* MGCAMB eq. 26 1901.05956 -- adjusted to CLASS convention 3*rho_class = 8*pi*G*rho_physical */
       ppw->pvecmetric[ppw->index_mt_eta_prime] = 0.5*a2/(9./2.*a2*mu*gamma*(ppw->pvecback[pba->index_bg_rho_tot_wo_smg] + ppw->pvecback[pba->index_bg_p_tot_wo_smg]) + k2)
           * (3.*ppw->rho_plus_p_theta*mu*gamma*(1. + 3./k2*(pow(a*H,2.) - Hconf_prime)) + 3.*rho_Delta*(a*H*mu*(gamma - 1.) - mu_prime*gamma - mu*gamma_prime)
@@ -1091,7 +1092,8 @@ int perturbations_einstein_scalar_smg(
         ppw->pvecmetric[ppw->index_mt_delta_p_smg] = 0.;
         }
     else{
-      ppw->pvecmetric[ppw->index_mt_delta_p_smg] = -2*a_prime_over_a* ppw->pvecmetric[ppw->index_mt_h_prime]/9/pow(a,2) + 2*k2*ppw->pvecmetric[ppw->index_mt_eta]/9/pow(a,2) + (
+      ppw->pvecmetric[ppw->index_mt_delta_p_smg] = -2*a_prime_over_a* ppw->pvecmetric[ppw->index_mt_h_prime]/9/pow(a,2) 
+      + 2*k2*ppw->pvecmetric[ppw->index_mt_eta]/9/pow(a,2) - (
       - 9.*cK*ppw->delta_p*pow(a,2)/M2
       + 2.*c1*k2*ppw->pvecmetric[ppw->index_mt_eta]
       + a*H*(
