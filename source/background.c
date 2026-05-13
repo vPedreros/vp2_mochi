@@ -2586,7 +2586,7 @@ int background_initial_conditions(
       pvecback[pba->index_bg_rho_tot] = pvecback[pba->index_bg_rho_tot_wo_smg] + pvecback[pba->index_bg_rho_smg];
       pvecback[pba->index_bg_p_tot] = pvecback[pba->index_bg_p_tot_wo_smg] + pvecback[pba->index_bg_p_smg];
       pvecback[pba->index_bg_w_smg] = pvecback[pba->index_bg_p_smg]/pvecback[pba->index_bg_rho_smg]; // probably never used anywhere in the code when gravity_model == stable_params
-      // pvecback[pba->index_bg_p_tot_prime] *= pvecback[pba->index_bg_H]/H_old; // correction for smg contribution. Never used anywhere in hiclass, because here only matter contributions without smg are considered in dp_dlna.
+      pvecback[pba->index_bg_p_tot_prime] *= pvecback[pba->index_bg_H]/H_old; // correction for smg contribution. Never used anywhere in hiclass, because here only matter contributions without smg are considered in dp_dlna.
       pvecback[pba->index_bg_rho_crit] = pvecback[pba->index_bg_rho_tot]-pba->K/a/a;
       pvecback[pba->index_bg_Omega_m] = Omega_m_old*rho_crit_old/pvecback[pba->index_bg_rho_crit];
       pvecback[pba->index_bg_Omega_r] = Omega_r_old*rho_crit_old/pvecback[pba->index_bg_rho_crit];
@@ -3246,7 +3246,7 @@ int background_sources(
         bg_table_row[pba->index_bg_rho_tot] = bg_table_row[pba->index_bg_rho_tot_wo_smg] + bg_table_row[pba->index_bg_rho_smg];
         bg_table_row[pba->index_bg_p_tot] = bg_table_row[pba->index_bg_p_tot_wo_smg] + bg_table_row[pba->index_bg_p_smg];
         bg_table_row[pba->index_bg_w_smg] = bg_table_row[pba->index_bg_p_smg]/bg_table_row[pba->index_bg_rho_smg]; // probably never used anywhere in the code when gravity_model == stable_params
-        // bg_table_row[pba->index_bg_p_tot_prime] *= bg_table_row[pba->index_bg_H]/H_old; // correction for smg contribution. Never used anywhere in hiclass, because here only matter contributions without smg are considered in dp_dlna.
+        bg_table_row[pba->index_bg_p_tot_prime] *= bg_table_row[pba->index_bg_H]/H_old; // correction for smg contribution. Never used anywhere in hiclass, because here only matter contributions without smg are considered in dp_dlna.
         bg_table_row[pba->index_bg_rho_crit] = bg_table_row[pba->index_bg_rho_tot]-pba->K/a/a;
         bg_table_row[pba->index_bg_Omega_m] = Omega_m_old*rho_crit_old/bg_table_row[pba->index_bg_rho_crit];
         bg_table_row[pba->index_bg_Omega_r] = Omega_r_old*rho_crit_old/bg_table_row[pba->index_bg_rho_crit];
