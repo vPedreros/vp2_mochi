@@ -1065,6 +1065,8 @@ int perturbations_einstein_scalar_smg(
         - a*H*(2. + run)*ppw->pvecmetric[ppw->index_mt_alpha]
         - res*c8*ppw->pvecmetric[ppw->index_mt_x_smg]
         + res*cH*ppw->pvecmetric[ppw->index_mt_x_prime_smg]/a/H;
+        - (run - ten + bra/2.)*ppw->pvecmetric[ppw->index_mt_x_prime_smg]
+        + bra/4.*ppw->pvecmetric[ppw->index_mt_h_prime];
     }
   }
   
@@ -1078,20 +1080,20 @@ int perturbations_einstein_scalar_smg(
     ppw->pvecmetric[ppw->index_mt_shear_smg] = 0.;
   }
   else {
-    if ((ppw->pvecback[pba->index_bg_w_smg] == -1) || (ppw->pvecback[pba->index_bg_rho_smg] == 0.)){
+    if (fabs(rho_smg) < 1e-14){
       ppw->pvecmetric[ppw->index_mt_delta_smg] = 0.; 
       ppw->pvecmetric[ppw->index_mt_delta_p_smg] = 0.; 
     } 
     else {
       delta_rho_smg = H/(3.*a) * (ppw->pvecmetric[ppw->index_mt_h_prime] - 2.*k2*ppw->pvecmetric[ppw->index_mt_eta]/(a*H)) - ppw->delta_rho;
-      ppw->pvecmetric[ppw->index_mt_delta_smg] = delta_rho_smg/ppw->pvecback[pba->index_bg_rho_smg];
+      ppw->pvecmetric[ppw->index_mt_delta_smg] = delta_rho_smg/rho_smg;
 
       ppw->pvecmetric[ppw->index_mt_delta_p_smg] = -1./(9.*a*a) * (ppw->pvecmetric[ppw->index_mt_h_prime_prime] 
                                                     + 2.*a*H*ppw->pvecmetric[ppw->index_mt_h_prime] 
                                                     - 2.*k2*ppw->pvecmetric[ppw->index_mt_eta]) - ppw->delta_p;
     }
 
-    if (rho_smg == 0. || fabs(rho_smg + p_smg) < 1e-3 * rho_smg) {
+    if (fabs(rho_smg) < 1e-14 || fabs(rho_smg + p_smg) < 1e-3 * fabs(rho_smg)) {
       ppw->pvecmetric[ppw->index_mt_theta_smg] = 0.;
       ppw->pvecmetric[ppw->index_mt_shear_smg] = 0.;
     }
