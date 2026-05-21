@@ -9571,8 +9571,13 @@ int perturbations_print_variables(double tau,
       
       double total_rho_plus_p = ppw->rho_plus_p_tot + rho_plus_p_smg;
       double total_delta_p = ppw->delta_p + ppw->pvecmetric[ppw->index_mt_delta_p_smg];
-      double total_rho_plus_p_theta = ppw->rho_plus_p_theta + rho_plus_p_smg * ppw->pvecmetric[ppw->index_mt_theta_smg];
-      double total_rho_plus_p_shear = ppw->rho_plus_p_shear + rho_plus_p_smg * ppw->pvecmetric[ppw->index_mt_shear_smg];
+      /* Use the (rho+p)*theta and (rho+p)*shear residuals of the smg fluid
+         directly. They stay finite as (rho+p)_smg -> 0, unlike the product
+         rho_plus_p_smg*theta_smg, which vanishes whenever theta_smg/shear_smg
+         are zeroed for w_smg ~ -1 and would silently drop the smg momentum
+         and shear from H_T_prime. */
+      double total_rho_plus_p_theta = ppw->rho_plus_p_theta + ppw->pvecmetric[ppw->index_mt_rho_plus_p_theta_smg];
+      double total_rho_plus_p_shear = ppw->rho_plus_p_shear + ppw->pvecmetric[ppw->index_mt_rho_plus_p_shear_smg];
       double total_p_prime = pvecback[pba->index_bg_p_tot_prime] + p_smg_prime;
 
       H_T_prime = 3.*a*H/total_rho_plus_p*(
@@ -10450,16 +10455,16 @@ int perturbations_derivs(double tau,
         // Run tests to make sure our smg model doesn't produces unstable perturbations resulting in segfault 
         if (ppt->skip_math_stability_smg == _FALSE_ && (ppw->approx[ppw->index_ap_gr_smg] == (int)gr_smg_off)){
           class_test(ppt->has_math_instability_smg,
-              ppt->error_message,"\n Mathematical instability detected. Mode k=%e is growing exponentially at a rate faster than %.2f*H0. \n",k,ppt->exp_rate_smg);
+              error_message,"\n Mathematical instability detected. Mode k=%e is growing exponentially at a rate faster than %.2f*H0. \n",k,ppt->exp_rate_smg);
         }
         // class_test(isnan(pvecmetric[ppw->index_mt_alpha_prime]),
-        //     ppt->error_message, " Isnan mt_alpha' at tau =%e k =%e! Possible tachyonic instability with perturbations growing exponentially",tau,k);
+        //     error_message, " Isnan mt_alpha' at tau =%e k =%e! Possible tachyonic instability with perturbations growing exponentially",tau,k);
         class_test(isnan(ppw->pvecmetric[ppw->index_mt_x_prime_prime_smg]),
-          ppt->error_message, " Isnan x'' at a =%e !",a);
+          error_message, " Isnan x'' at a =%e ! Possible instability with perturbations growing exponentially. Mode k=%e, tau=%e",a,k,tau);
       class_call(
         perturbations_derivs_smg(ppt, ppw, pv, dy, pvecmetric),
         ppt->error_message,
-        ppt->error_message
+        error_message
       );
     }
 

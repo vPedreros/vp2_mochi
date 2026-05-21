@@ -52,12 +52,14 @@ colours = ['b','g','r']
 for name in namelist:
     idx = namelist.index(name)
     plt.loglog(baLCDM['z'],fLCDM*baLCDM[name],colours[idx]+'-')
+    plt.loglog(baLCDM['z'],fLCDM*baLCDM[name]/LCDM.c_in_km_per_s(),colours[idx]+'-')
 
 
 # plot the three distances in the Einstein-De Sitter model
 for name in namelist:
     idx = namelist.index(name)
     plt.loglog(baCDM['z'],fCDM*baCDM[name],colours[idx]+'--')
+    plt.loglog(baCDM['z'],fCDM*baCDM[name]/CDM.c_in_km_per_s(),colours[idx]+'--')
 
 plt.legend(namelist,loc='upper left')
 plt.xlim([0.07, 10])

@@ -337,6 +337,8 @@ int perturbations_define_indices_mt_smg(
   class_define_index(ppw->index_mt_delta_p_smg, _TRUE_, *index_mt,1);
   class_define_index(ppw->index_mt_theta_smg, _TRUE_, *index_mt,1);
   class_define_index(ppw->index_mt_shear_smg, _TRUE_, *index_mt,1);
+  class_define_index(ppw->index_mt_rho_plus_p_theta_smg, _TRUE_, *index_mt,1);
+  class_define_index(ppw->index_mt_rho_plus_p_shear_smg, _TRUE_, *index_mt,1);
   /**************************/
   /* ^For use with CONCEPT^ */
   /**************************/
@@ -1065,8 +1067,6 @@ int perturbations_einstein_scalar_smg(
         - a*H*(2. + run)*ppw->pvecmetric[ppw->index_mt_alpha]
         - res*c8*ppw->pvecmetric[ppw->index_mt_x_smg]
         + res*cH*ppw->pvecmetric[ppw->index_mt_x_prime_smg]/a/H;
-        - (run - ten + bra/2.)*ppw->pvecmetric[ppw->index_mt_x_prime_smg]
-        + bra/4.*ppw->pvecmetric[ppw->index_mt_h_prime];
     }
   }
   
@@ -1078,32 +1078,45 @@ int perturbations_einstein_scalar_smg(
     ppw->pvecmetric[ppw->index_mt_delta_p_smg] = 0.;
     ppw->pvecmetric[ppw->index_mt_theta_smg] = 0.;
     ppw->pvecmetric[ppw->index_mt_shear_smg] = 0.;
+    ppw->pvecmetric[ppw->index_mt_rho_plus_p_theta_smg] = 0.;
+    ppw->pvecmetric[ppw->index_mt_rho_plus_p_shear_smg] = 0.;
   }
   else {
     if (fabs(rho_smg) < 1e-14){
-      ppw->pvecmetric[ppw->index_mt_delta_smg] = 0.; 
-      ppw->pvecmetric[ppw->index_mt_delta_p_smg] = 0.; 
-    } 
+      ppw->pvecmetric[ppw->index_mt_delta_smg] = 0.;
+      ppw->pvecmetric[ppw->index_mt_delta_p_smg] = 0.;
+    }
     else {
       delta_rho_smg = H/(3.*a) * (ppw->pvecmetric[ppw->index_mt_h_prime] - 2.*k2*ppw->pvecmetric[ppw->index_mt_eta]/(a*H)) - ppw->delta_rho;
       ppw->pvecmetric[ppw->index_mt_delta_smg] = delta_rho_smg/rho_smg;
 
-      ppw->pvecmetric[ppw->index_mt_delta_p_smg] = -1./(9.*a*a) * (ppw->pvecmetric[ppw->index_mt_h_prime_prime] 
-                                                    + 2.*a*H*ppw->pvecmetric[ppw->index_mt_h_prime] 
+      ppw->pvecmetric[ppw->index_mt_delta_p_smg] = -1./(9.*a*a) * (ppw->pvecmetric[ppw->index_mt_h_prime_prime]
+                                                    + 2.*a*H*ppw->pvecmetric[ppw->index_mt_h_prime]
                                                     - 2.*k2*ppw->pvecmetric[ppw->index_mt_eta]) - ppw->delta_p;
     }
 
+    /* (rho+p)*theta and (rho+p)*shear of the effective smg fluid. These are
+       the genuine momentum/shear residuals of the (modified) Einstein
+       equations and stay finite even when (rho+p)_smg -> 0 (w_smg -> -1),
+       so they are computed unconditionally and stored for use downstream
+       (e.g. H_T_prime). Do NOT reconstruct these as (rho+p)_smg*theta_smg:
+       the ratios below are zeroed when (rho+p)_smg is small. */
+    rho_plus_p_theta_smg = 2.*k2*ppw->pvecmetric[ppw->index_mt_eta_prime]/(3.*a*a) - ppw->rho_plus_p_theta;
+    ppw->pvecmetric[ppw->index_mt_rho_plus_p_theta_smg] = rho_plus_p_theta_smg;
+
+    rho_plus_p_shear_smg = -2.*k2/(9.*a*a) * (ppw->pvecmetric[ppw->index_mt_alpha_prime]
+                                          - ppw->pvecmetric[ppw->index_mt_eta]
+                                          + 2.*a*H*ppw->pvecmetric[ppw->index_mt_alpha]) - ppw->rho_plus_p_shear;
+    ppw->pvecmetric[ppw->index_mt_rho_plus_p_shear_smg] = rho_plus_p_shear_smg;
+
+    /* theta_smg and shear_smg are the fluid ratios (.../(rho+p)_smg), which
+       are ill-defined when (rho+p)_smg -> 0; guard them for output only. */
     if (fabs(rho_smg) < 1e-14 || fabs(rho_smg + p_smg) < 1e-3 * fabs(rho_smg)) {
       ppw->pvecmetric[ppw->index_mt_theta_smg] = 0.;
       ppw->pvecmetric[ppw->index_mt_shear_smg] = 0.;
     }
     else {
-      rho_plus_p_theta_smg = 2.*k2*ppw->pvecmetric[ppw->index_mt_eta_prime]/(3.*a*a) - ppw->rho_plus_p_theta;
       ppw->pvecmetric[ppw->index_mt_theta_smg] = rho_plus_p_theta_smg/(rho_smg + p_smg);
-
-      rho_plus_p_shear_smg = -2.*k2/(9.*a*a) * (ppw->pvecmetric[ppw->index_mt_alpha_prime] 
-                                            - ppw->pvecmetric[ppw->index_mt_eta]
-                                            + 2.*a*H*ppw->pvecmetric[ppw->index_mt_alpha]) - ppw->rho_plus_p_shear;
       ppw->pvecmetric[ppw->index_mt_shear_smg] = rho_plus_p_shear_smg/(rho_smg + p_smg);
     }
   }
@@ -1147,9 +1160,9 @@ int perturbations_einstein_scalar_smg(
         + 3*a*lambda2*ppw->delta_rho/(H*M2)
         - 9./2.*a*cB*(2. - cB)*ppw->delta_p/(H*M2)
         - 2.*pow(a*H,2)*(cs2num*k2*pow(a*H,-2) - 4.*lambda8)*ppw->pvecmetric[ppw->index_mt_x_smg]
-        - 8.*a*H*lambda7*ppw->pvecmetric[ppw->index_mt_x_prime_smg]  
+        - 8.*a*H*lambda7*ppw->pvecmetric[ppw->index_mt_x_prime_smg]
       )/(cD*(2. - cB));
-    } 
+    }
     else {
       ppw->pvecmetric[ppw->index_mt_x_prime_prime_smg] =
       (
