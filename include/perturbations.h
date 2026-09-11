@@ -671,6 +671,7 @@ struct perturbations_workspace
   /* For use with CONCEPT */
   /************************/
   int index_mt_delta_smg;
+  int index_mt_delta_rho_smg;        /**< delta_rho of the effective smg fluid (absolute; always finite) */
   int index_mt_delta_p_smg;
   int index_mt_theta_smg;
   int index_mt_shear_smg;
